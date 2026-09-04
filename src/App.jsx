@@ -8,6 +8,7 @@ import heroFallback from './assets/hero.png'
 import templeImage from '../Temple.jpg'
 import templeImageOne from '../Temple1.jpg'
 import templeImageThree from '../Temple3.jpg'
+import ganeshChaturthiImage from '../Ganeshchaturthi.jpg'
 import './App.css'
 
 const DEFAULT_CONTENT = {
@@ -20,6 +21,7 @@ const DEFAULT_CONTENT = {
     { title: 'Temple exterior', category: 'Temple exterior', image: templeImage },
     { title: 'Sacred detail', category: 'Sanctum', image: templeImageOne },
     { title: 'Festival light', category: 'Decorations', image: templeImageThree },
+    { title: 'Vinayagar Chaturthi 2026', category: 'Festival', image: ganeshChaturthiImage },
   ], festivals: [
     { name: 'Vinayagar Chaturthi', month: 'Tamil month / Gregorian month to be confirmed', detail: 'Festival details will be updated by temple administration.' },
     { name: 'Sankatahara Chaturthi', month: 'Monthly observance', detail: 'Festival details will be updated by temple administration.' },
@@ -34,7 +36,7 @@ const FESTIVAL_TAMIL = ['விநாயகர் சதுர்த்தி', 
 const adminSchema = z.object({ hero: z.string().url('Enter a valid image URL'), maps: z.string().url('Enter a valid Google Maps URL'), video: z.string().refine((value) => !value || value.includes('youtube.com/embed/'), 'Use a YouTube embed URL'), history: z.string().min(20), timings: z.string().min(5), pooja: z.string().min(5), contact: z.string().min(5), facebook: z.string().url().or(z.literal('')), instagram: z.string().url().or(z.literal('')) })
 
 function App() {
-  const [content, setContent] = useState(() => { const saved = JSON.parse(localStorage.getItem('slv-content') || 'null'); if (!saved) return DEFAULT_CONTENT; return { ...saved, hero: saved.hero?.includes('1548013146') || saved.hero?.includes('unsplash') || saved.hero?.includes('temple-exterior') ? DEFAULT_CONTENT.hero : saved.hero, gallery: saved.gallery?.map((image, index) => image.image?.includes('unsplash') ? { ...image, image: DEFAULT_CONTENT.gallery[index]?.image || templeImage } : image).filter((image) => image.image) || DEFAULT_CONTENT.gallery } })
+  const [content, setContent] = useState(() => { const saved = JSON.parse(localStorage.getItem('slv-content') || 'null'); if (!saved) return DEFAULT_CONTENT; const gallery = saved.gallery?.map((image, index) => image.image?.includes('unsplash') ? { ...image, image: DEFAULT_CONTENT.gallery[index]?.image || templeImage } : image).filter((image) => image.image) || DEFAULT_CONTENT.gallery; if (!gallery.some((image) => image.image === ganeshChaturthiImage)) gallery.push(DEFAULT_CONTENT.gallery[3]); return { ...saved, hero: saved.hero?.includes('1548013146') || saved.hero?.includes('unsplash') || saved.hero?.includes('temple-exterior') ? DEFAULT_CONTENT.hero : saved.hero, gallery } })
   const [admin, setAdmin] = useState(false); const [loginOpen, setLoginOpen] = useState(false); const [lightbox, setLightbox] = useState(null); const [mobileOpen, setMobileOpen] = useState(false); const [toast, setToast] = useState(''); const [loginError, setLoginError] = useState('')
   const [apiStatus, setApiStatus] = useState('offline')
   const [language, setLanguage] = useState(() => localStorage.getItem('slv-language') || 'ta')
